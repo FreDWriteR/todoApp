@@ -20,7 +20,7 @@
     };
 
     const updateTask = debounce((task) => {
-        axios.put(`/api/tasks/${task.id}`, task).then((response) => {
+        axios.post(`/api/tasks/${task.id}`, task).then((response) => {
             task.savedMessage = 'SAVED';
             setTimeout(() => {
                 task.savedMessage = ''; // Убираем сообщение через 100 мс
@@ -30,7 +30,7 @@
     }, 300);
 
     const deleteTask = (id) => {
-        axios.delete(`/api/tasks/${id}`).then(() => {
+        axios.post(`/api/tasks/${id}/delete`).then(() => {
             fetchTasks();
         });
     };
@@ -57,18 +57,18 @@
     <div class="container mx-auto p-4">
         <h1 class="text-xl mb-4">Менеджер задач</h1>
         <form @submit.prevent="addTask">
-            <input v-model="newTask.description" placeholder="New task" class="border rounded p-2 mb-4 w-full" />
+            <textarea v-model="newTask.description" placeholder="New task" class="border rounded p-2 mb-4 w-full"></textarea>
             <button type="submit" class="bg-blue-500 text-white p-2 rounded">Add Task</button>
         </form>
 
         <div class="mt-4">
             <div v-for="task in tasks" :key="task.id" :class="taskClass(task.status)" class="p-4 border rounded mb-4">
                 <div class="relative mb-2">
-                    <input
+                    <textarea
                         v-model="task.description"
                         @input="updateTask(task)"
                         class="border rounded p-2 w-full"
-                    />
+                    ></textarea>
                     <span
                         v-if="task.savedMessage"
                         class="absolute text-green-500 ml-2 text-lg top-1/2 right-1.5 transform -translate-y-1/2 z-10">
